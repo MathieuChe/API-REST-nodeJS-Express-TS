@@ -1,0 +1,10 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 8889,
+    "username": "root",
+    "password": "root",
+    "database": "api2itech",
+    "synchronize": true,
+    "logging": true
+}
