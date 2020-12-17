@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import { User } from "../entities/User";
-import { BadRequest, NotFoundError, ConflictError, UnprocessableEntityError} from "../errors";
+import { BadRequestError, NotFoundError, ConflictError, UnprocessableEntityError} from "../errors";
 import { UserRepository } from "../repository/UserRepository";
 
 export class UserController {
@@ -17,7 +17,7 @@ export class UserController {
         /* On met l'email dans une constante pour la tester avant de faire une requete */
         const email = req.params.email;
         if(!email){
-            throw new BadRequest();
+            throw new BadRequestError();
         }
 
         const user: User | undefined = await this.userRepo.findByEmail(email);
