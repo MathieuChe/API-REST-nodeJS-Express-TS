@@ -1,3 +1,6 @@
+/* Importer pour les décorateurs */
+import 'reflect-metadata';
+
 /* Importer tout en tant que alias express à partir de express */
 import * as express from 'express';
 
@@ -8,7 +11,7 @@ import { createConnection } from 'typeorm';
 import * as bodyParser from 'body-parser';
 
 /* Permet d'éviter d'ajouter le fragment express avant les propriétés: Eviter le préfixage */
-import { Request, Response, Application } from 'express';
+import { Request, Response, Application, NextFunction } from 'express';
 
 /* Charger le fichier de Routes qui est un tableau à ne pas oublier 
 Route: type de l'interface Route  
@@ -18,9 +21,6 @@ import { Route, routes } from './routes';
 
 /* Charger le fichier des erreurs */
 import { DomainError } from './errors';
-
-/* Le typage de next */
-import { NextFunction } from 'connect';
 
 /* On crée une instance à partir de express */
 const app: Application = express();

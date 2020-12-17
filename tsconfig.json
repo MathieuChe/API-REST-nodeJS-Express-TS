@@ -8,6 +8,8 @@
         "module": "commonjs",
         "moduleResolution": "Node",
         "outDir": "./build", 
-        "sourceMap": true
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     }
 }

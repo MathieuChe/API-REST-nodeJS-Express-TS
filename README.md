@@ -17,6 +17,7 @@ Au début et à chaque modif faire git add . et git commit -m "la modif"
 1) git init
 2) git add .
 3) git commit -m "..."
+4) git push origin main
  
 
 
@@ -457,3 +458,68 @@ expect(res).to.have.json; -> L'objet réponse doit avoir/etre de type json. Ce s
 expect(res).to.have.status(200); -> On attend un code 200 car tout fonctionne 
 expect(res.body).eql({message: "Hello, World"}); -> On veut récupérer le corps de la response et voir s'il est égale à l'objet .json 
 /*\ Attention il y a une différence entre eql et equal, donc pour comparer deux objets on passera par eql 
+
+# Base de données gérée par typeORM
+
+typeorm facilite la sélection de la base de données sql type mysql, postgres et parfois mongoDB car c'est une exception.
+On ne tente plus de passer directement à la base de donnée. On passe par un ORM (Object Relationship Mapping). 
+Le principe du mapping -> fait référence a carte donc sous entendre le terme correspondance. C'est la correspondance entre une class et une table en base.
+
+Nous avons un design pattern MVC donc on fait de la POO. On travaille donc avec des objets mais en partant de la DB on récupère un tableau. Donc chaque ligne correspond à un objet. 
+=> On veut récupérer autant d'objets qu'il y a de ligne dans la table. Pour cela il faut passer par le mapping car par défaut ca ne se fait pas naturellement.
+Donc ORM le principe est de mapper (faire correspondre) une ligne du tableau avec un objet choisi d'une classe qui correspond au modèle de données.
+typeORM a le système d'automatisation qui fera le mapping à notre place.
+
+Si on n'a pas typeORM, comment faire du mapping de ligne de tableau en objet ?
+Voir photo mapping
+
+=> Après avoir créé notre class (= entité) avec les propriétés (id, name, etc.), typeORM va directement faire les requetes sur les tables pour faire du mapping et récupérer les objets à travers la table. Il fait de la DAO. On n'aura plus qu'à manipuler les objets.
+typeORM est aussi capable de créer les bases de données.
+
+Les ORM de Node:
+typeORM
+sequelize
+doctrine
+propel
+
+Pour travailler avec des entités on va devoir importer une bibliothèque reflect-metadata car typeORM utilise des décorateurs. On définit les entités avec les décorateurs @.
+Il y a aussi des décorateurs qui gèrent les évènements.
+
+Retour dans le fichier main.ts
+1) Importer reflect-metadata -> import 'reflect-metadata';
+Retour dans le fichier tsconfig.json
+
+2) Configurer
+"emitDecoratorMetadata": true -> Les décorateurs peuvent émettre "experimentalDecorators": true -> optionnel
+
+Créer un répertoire entites dans src
+Créer User.entities.ts
+3) Créer des entités
+
+# Envoyer les entités vers le server de DB
+
+typeorm dans le terminal fourni de l'aide
+NB: s'il ne reconnait pas la commande écrire npm i -g typeorm pour l'installer en global
+
+Aller dans le fichier ormconfig.json pour spécifier le chemin de tous nos répertoires pour ne pas avoir à le refaire à chaque fois.
+Pour connaitre les répertoires:
+"entities": ["'src/entities/**/*.{ts,js}'"], -> ou se trouvent toutes les classes. /*\ aux " ' ' " . terminal: typeorm schema:sync
+Pour envoyer l'entité avec typeorm, faire la requete vers la base et l'envoyer vers le serveur on écrit dans le terminal:
+typeorm schema:sync
+/*\ Cependant dans phpMyAdmin on a aucune base de créée.
+
+"entities": ["src/entities/**/*.ts","build/entities/**/*.js"] -> Permet avec npm run dev de créer les tables sans utiliser le sync. terminal: npm run dev  
+/*\ Ca nous crée les tables dans phpMyAdmin   
+
+"migrations": ["src/migrations/**/*.ts"], -> permet de faire évoluer la structure de la db et de pouvoir version les db si on veut revenir en arriver
+"subscribers": ["src/subscribers/**/*.ts"], -> automatiser de facon évènementiel les tâches
+
+Pour les commandes cli
+"cli": {"entitiesDir": "src/entities",
+        "migrationsDir": "src/migrations",
+        "subscribersDir": "src/subscribers"}
+
+/!!!\ Nous utiliserons les fixtures pour pallier ce problème.
+
+# Dans phpMyAdmin
+
