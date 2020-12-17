@@ -28,7 +28,7 @@ export class NotFoundError extends DomainError {
 }
 
 export class InternalServerError extends DomainError {
-    constructor(reason?: string) {
+    constructor(reason: string = 'Internal Server Error') {
 
         super(`Internal Server Error`);
         /* InternalServerError correspond à une erreur 404 */
@@ -37,3 +37,37 @@ export class InternalServerError extends DomainError {
         this.reason = reason;
     }
 }
+
+export class BadRequest extends DomainError {
+    constructor(reason: string = 'Bad Request') {
+
+        super(`Bad Request`);
+        /* InternalServerError correspond à une erreur 404 */
+        this.code = 400;
+        /* On peut donner une reason mais elle reste optionnelle */
+        this.reason = reason;
+    }
+}
+
+export class ConflictError extends DomainError {
+    constructor(reason: string = 'Conflict duplicate') {
+
+        super(`Conflict duplicate`);
+        /* InternalServerError correspond à une erreur 404 */
+        this.code = 409;
+        /* On peut donner une reason mais elle reste optionnelle */
+        this.reason = reason;
+    }
+}
+
+export class UnprocessableEntityError extends DomainError {
+    constructor(reason: string = 'Unprocessable Entity Error') {
+
+        super('Unprocessable Entity Error');
+        /* InternalServerError correspond à une erreur 404 */
+        this.code = 422;
+        /* On peut donner une reason mais elle reste optionnelle */
+        this.reason = reason;
+    }
+}
+

@@ -6,7 +6,7 @@
     "password": "root",
     "database": "api2itech",
     "synchronize": true,
-    "logging": true,
+    "logging": false,
     "entities": [
         "src/entities/**/*.ts",
         "build/entities/**/*.js"

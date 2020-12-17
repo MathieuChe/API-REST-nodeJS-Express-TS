@@ -152,7 +152,7 @@ const HOST = process.env.HOST || 'localhost'; -> Soit je prends le nom par défa
 username et password dépend de la config de l'ordinateur et de la base de donnée
 "host": "localhost" -> hôte
 "synchronize": true -> permet la synchronisation
-"logging": true -> permet d'avoir des logg sur la base de données
+"logging": true -> permet d'avoir des logg sur la base de données toutes les requêtes type query: SELECT `User`.`id` AS `User_id`, `User`.`email` AS `User_email`.
 
 Nous avons déjà une base de données. 
 1) Démarrer mamp 
@@ -570,3 +570,57 @@ import * as bcrypt from 'bcryptjs';
 
 8) faire un npm run schema:sync pour tout synchroniser
 9) Puis faire npm run fixtures
+
+# System de repository
+
+Un système qui sert a manipuler tous les acces a la base de données.
+Dans ce système on fait les méthodes Get, update, delete, etc. dans le controller.
+Il faut le considérer comme un grand store. Le controller fait appel au repository et lui va se charger des entités.
+
+1) Créer un dossier repository
+2) Créer un fichier UserRepository.ts
+3) Créer une class UserRepository.ts et l'extends avec Repository<User> de type User.
+4) Importer: import { Repository } from "typeorm";
+5) Importer: import { User } from "../entities/User";
+6) Ajouter le décorateur @EntityRepository(User)
+Remarque: c'est déconseillé de faire des requetes en dehors du Repository car il est fait pour cela. S'il y a des fonctions supplémentaires, des requetes SQL, il faut les centraliser dans un seul fichier ici Repository.
+7) Ajouter une fonction asynchrone.
+NB: Toutes les fonctions seront asynchrones
+Si on cherche un utilisateur par son email qui n'existe pas dans le repository on crée la méthode
+C'est une methode qui n'éxiste pas dans le Repository donc va étendre les méthodes 
+Elle retournera une promise qui sera soit un User soit undefined 
+
+async findByEmail(value: string): Promise<User | undefined> {
+    return await this.findOne({ where: {email: value}});
+} 
+On donne des objets de condition: le where est l'email dans la table doit être égale à celle fournie par l'utilisateur 
+
+=> On peut donc utiliser le UserRepository maintenant dans le controller
+
+# UserController
+
+1) Créer un fichier UserController.ts
+2) 
+import { getCustomRepository } from "typeorm";
+import { UserRepository } from "../repository/UserRepository";
+
+3) export class UserController {private userRepo: UserRepository = getCustomRepository(UserRepository);}
+
+4) Retourner dans le routes.ts pour déclarer une nouvelle route
+{method: 'get', 
+path: '/users',
+controller: UserController, 
+action: 'getUsers'}
+
+5) npm run dev pour lancer le server et aller sur localhost:3000/users pour afficher les données en .json. 
+Il récupère donc les données via la base de données.
+
+# postman
+
+pour tester une methode post 
+rentrer l'url 
+Body > Raw > JSON
+{"email": "toto@gmail.com",
+"password": "0000"}
+Puis Send
+

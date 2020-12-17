@@ -23,10 +23,10 @@ export class User {
     password: string;
 
     @Column()
-    firstName: string;
+    firstName: string = '';
 
     @Column()
-    lastName: string;
+    lastName: string = '';
 
     setPassword(password: string): void {
         /* 
