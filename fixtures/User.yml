@@ -1,0 +1,16 @@
+entity: User
+items:
+  user1:
+    email: 'john.doe@gmail.com'
+    firstName: 'John'
+    lastName: 'Doe'
+    __call:
+      setPassword: # setPassword("000000")
+        - "000000"
+  user2:
+    email: "jane.doe@gmail.com"
+    firstName: 'Jane'
+    lastName: 'Doe'
+    __call:
+      setPassword:
+        - "123456"

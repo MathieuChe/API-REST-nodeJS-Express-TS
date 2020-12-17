@@ -536,3 +536,25 @@ npm run schema:sync
 # Les fixtures
 
 Lorsqu'on aura des données a précharger dans la db, on passe par les fixtures.
+On va installer un nouveau package:
+https://www.npmjs.com/package/typeorm-fixtures-cli
+
+extension .yml est comme un format .json mais en plus évolué, plus lisible, simplifié et amélioré.
+
+1) npm i typeorm-fixtures-cli --save-dev -> Vérifier que c'est installé dans le package.json
+2) Dans le script de package.json ajouter:
+"fixtures": "fixtures ./fixtures --config ormconfig.json --require ts-node/register" -> le binaire fixtures, le chemin, la config du fichier ormconfig.json et require le ts-node/register
+3) dans le dossier fixture créer les fichiers .yml pour chaque entité
+Créer un fichier qu'on appellera User.yml
+4) On ne met pas l'id car il est autogénéré via uuid
+Petite particularité avec le mot de passe. Il doit être crypté.
+2 facons: soit on met une chaine cryptée directement soit on fait appel a une fonction définie dans le fichier User.ts. 
+Pour faire appel a une fonction dans User.yml, on utilise _call: puis le nom de la fonction en dessous de la manière suivante:
+__call:
+      setPassword: # setPassword("00000", 'arg1', 'arg2')
+        - "00000"
+        - "arg1"
+        - "arg2"
+
+Une fois la structure définie  
+
