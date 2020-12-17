@@ -311,7 +311,7 @@ public data?: {}; -> les données. Optionnel
 
 5) Dans le constructor on souhaite capturer les traces d'erreur via:
 Error.captureStackTrace(this, this.constructor);
-Il prend l'objet qu'on lui donne et ajoute la trace des erreurs capturées à l'objet fourni. 
+Il prend l'objet qu'on lui donne et ajoute la trace des erreurs capturées à l'objet fourni. Il va créer une propriété stack dans mon objet.
 this fait référence à l'instance.
 
 6) export class NotFoundError extends DomainError {}
@@ -373,4 +373,87 @@ app.use((err: Error | DomainError, req: Request, res: Response, next: NextFuncti
 })
 
 
+# Les tests
 
+Les tests unitaires (concentré sur une unité dans le code) et les tests d'intégration (concentré sur un aspect plus large de l'application, un peu plus général qui va déclenché un ensemble d'évènements). Et les tests fonctionnels.
+
+Les tests sont très importants. Il ne s'agit pas de tester les fonctionalités individuellement mais de tester également l'ensemble des fonctionalités en meme temps. 
+Il va donc falloir scripter nos tests car si on en a mille on ne va pas les faire un part un part. 
+Pour scripter les tests il va falloir importer des modules et indiquer le répertoire de tests. Les modules vont s'exécuter dans ce répertoire. Si un seul test sur l'ensemble des tests qui ne passe pas, tous les voyants sont rouges. Il faut absolument que tous les tests passent.
+Le problème est que les tests, nous les définissons donc nous ne pensons pas à 100% à tout donc on peut passer a coté de certains tests. Ce n'est pas infaillible. 
+
+Téléchargement des modules en phase de développement --save-dev
+les plateforms: 
+https://www.chaijs.com/ -> test d'intégration
+https://mochajs.org/ -> simulation environnement de type navigateur: marcherait sur n'importe quel navigateur
+
+On récupère les bibliothèques:
+npm i --save-dev chai chai-http @types/chai @types/chai-http
+npm i --save-dev mocha @types/mocha
+
+npm i --save-dev chai chai-http @types/chai @types/chai-http mocha @types/mocha
+
+NB: Généralement on commence par le test plutot que de coder -> méthode TDD
+
+Création du fichier index.controller.spec.ts dans le dossier test
+Définir si on veut faire un expect, un should ou un assert.
+On va débuter par un test fonctionnel plutot qu'un test unitaire.
+test intégration (comprend un BDD) > test fonctionnel (peu comprendre une BDD) > test unitaire (pas de BDD).
+
+Commencer par importer la bibliothèque mocha: 
+1) import 'mocha'; c'est le navigateur mais il a besoin d'un serveur donc il faut que le gestionnaire de test soit capable de démarrer le server. 
+Il faut que mocha puisse se connecter au serveur pour tester l'api.
+
+2) import * as app from '../src/main'; -> pour récupérer le app pour récupérer le serveur
+
+3) Importer les bibliothèques chai et chai-http
+import chai = require('chai');
+import chaiHttp = require('chai-http');
+import { expect } from 'chai';
+
+4) Dans le main.ts, on a besoin d'exporter //ecoute du serveur comme ca le système de test pourra démarrer le serveur et démarrer le test.
+On rend le app.listen() asynchrone donc ajout de async et await pour qu'on puisse démarrer un autre serveur si l'on souhaite et ca restera non bloquant
+
+5) Retour dans index.controller.spec.ts
+chai.use(chaiHttp);
+
+6) Titrer qui permet de décrire ce que va faire notre test puis ajoute la fonction qui décrira une suite de tests: 
+describe('Hello Test', () => {
+    /* ici une uite de tests */
+    /* Le mot clé pour le test est it et en argument on met le titre du test comme ca s'il y a une erreur on saura c'était sur quel test */
+    it('GET / should return "Hello, World', () => {
+        let name = 'foo';
+        /* J'attends que le name soit égal à foo */
+        expect(name).equal('foo')
+    })
+})
+
+7) Aller dans la rubrique script de package.json pour modifier le "test".
+Test fonctionnel avec mocha mais plus integration car exploitation BDD, on va le regarder avec --watch et ajout de pluggin avec --require et le pluggin ts-node/register mais aussi regarder l'extension de ts et enfin indiquer le répertoire de test qui est récursif et tu prends tous les fichiers qui ont n'importe quel nom avec l'extension .spec.ts
+
+ts-node sert a lancer le code et l'executer via JS sans le compiler.
+"mocha --watch --require ts-node/register --watch-extension ts test/**/*.spec.ts"
+
+Pour faire le test ecrire dans le terminal -> npm run test
+Pour vérifier que l'environnement fonctionne on exécute le test de index.controller.spec.ts avec:
+let name = 'foo';
+        expect(name).equal('foo') --> Affichera en vert car c'est ce qui est attendu
+
+let name = 'foo';
+        expect(name).equal('fool') --> Affichera en rouge car ce n'est pas ce qui est attendu
+
+Donc notre test est fonctionnel.
+
+# Test du controller
+
+On veut tester la fonction async index(){ return { message: 'Hello, World' }}
+
+Retour dans index.controller.spec.ts
+Dans le it('GET / should return "Hello, World', () => {
+chai.request(app) -> Il appelle le server pour démarrer le navigateur
+get('/') -> Le chemin
+end((err: any, res: any) -> retour de ce que je suis censé récupéré. Il y a une callback car on ne sait pas dans combien de temps on aura la réponse du server.
+expect(res).to.have.json; -> L'objet réponse doit avoir/etre de type json. Ce sont les propriétés de expect.
+expect(res).to.have.status(200); -> On attend un code 200 car tout fonctionne 
+expect(res.body).eql({message: "Hello, World"}); -> On veut récupérer le corps de la response et voir s'il est égale à l'objet .json 
+/*\ Attention il y a une différence entre eql et equal, donc pour comparer deux objets on passera par eql 

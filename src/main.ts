@@ -82,14 +82,16 @@ app.use((err: Error | DomainError, req: Request, res: Response, next: NextFuncti
 /* ECOUTE DU SERVER */
 
 /* Ajouter le PORT et HOST */
-app.listen(PORT, HOST, () => {
+/* export du serveur comme ca le système de test pourra démarrer le serveur et démarrer le test. */
+/* On rend async et await donc asynchrone pour qu'on puisse démarrer un autre serveur si l'on souhaite et ca restera non bloquant */
+module.exports = app.listen(PORT, HOST, async () => {
     // Permet de savoir que le server a bien démarré.
     console.log(`[express] server has started on localhost:3000`);
 
     // si j'essaie de me connecter a la base de données et qu'il y a une erreur
     try {
         // Créer la connection
-        createConnection();
+        await createConnection();
 
     // On catch l'erreur
     } catch (error){

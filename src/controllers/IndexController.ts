@@ -10,5 +10,6 @@ export class IndexController {
         // throw new NotFoundError('My Middleware');
         // throw new InternalServerError();
         /* Comme ce sont des fonctions async je retourne le résultat */
+        return { message: 'Hello, World' };
     }
 }
