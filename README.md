@@ -624,3 +624,6 @@ Body > Raw > JSON
 "password": "0000"}
 Puis Send
 
+# General
+
+Comme c'est une API, On doit renvoyer les informations les plus claires possibles afin d'informer au mieux le client

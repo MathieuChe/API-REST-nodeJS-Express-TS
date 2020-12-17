@@ -38,10 +38,10 @@ export class InternalServerError extends DomainError {
     }
 }
 
-export class BadRequest extends DomainError {
-    constructor(reason: string = 'Bad Request') {
+export class BadRequestError extends DomainError {
+    constructor(reason: string = 'Bad Request Error') {
 
-        super(`Bad Request`);
+        super(`Bad Request Error`);
         /* InternalServerError correspond à une erreur 404 */
         this.code = 400;
         /* On peut donner une reason mais elle reste optionnelle */
