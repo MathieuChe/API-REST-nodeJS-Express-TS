@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import * as bcrypt from 'bcryptjs';
 
 
 /* Decorateur Entity car c'est une entité */
@@ -21,6 +22,18 @@ export class User {
     @Column()
     password: string;
 
-    setPassword(){}
+    @Column()
+    firstName: string;
+
+    @Column()
+    lastName: string;
+
+    setPassword(password: string): void {
+        /* 
+        utiliser la methode de bcrypt .hashSync de facon synchrone.
+        en argument mettre le password, on peut rajouter en second argument un entier pour définir la taille du password mais il en a une par defaut. A savoir que plus le nombre est grand, plus c'est gourment en ressource.
+         */
+        this.password = bcrypt.hashSync(password);
+    }
 
 }

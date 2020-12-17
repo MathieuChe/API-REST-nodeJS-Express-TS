@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "typeorm": "ts-node ./node_modules/typeorm/cli -f ./ormconfig.json",
-    "schema:sync": "npm run typeorm schema:drop && npm run orm schema:sync",
+    "schema:sync": "npm run typeorm schema:drop && npm run typeorm schema:sync",
     "test": "mocha --watch --require ts-node/register --watch-extension ts test/**/*.spec.ts",
     "fixtures": "fixtures ./fixtures --config ormconfig.json --require ts-node/register"
   },
@@ -17,6 +17,7 @@
   "author": "Mathieu Chelim",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mysql": "^2.18.1",

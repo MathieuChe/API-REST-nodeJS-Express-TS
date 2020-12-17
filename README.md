@@ -556,5 +556,17 @@ __call:
         - "arg1"
         - "arg2"
 
-Une fois la structure définie  
+5) Il va nous falloir une petite bibliothèque pour encrypter le mot de passe.
+npm i bcryptjs
+/*\ Ne jamais utiliser de md5, sha1 pour crypter car pas du tout sécurisé.
 
+6) Udpater dans User.ts le firstName et le lastName avec @Column et la fonction setPassword.
+setPassword(password: string): void {
+        this.password = bcrypt.hashSync(password);
+    }
+
+7) Importer la bibliothèque bcryptjs dans User.ts
+import * as bcrypt from 'bcryptjs';
+
+8) faire un npm run schema:sync pour tout synchroniser
+9) Puis faire npm run fixtures
