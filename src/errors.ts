@@ -10,6 +10,7 @@ export class DomainError extends Error {
         /* La méthode super du constructeur */
         super(message); 
 
+        /* Elle va capturer toutes les traces empilées  */
         Error.captureStackTrace(this, this.constructor);
     }
 

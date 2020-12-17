@@ -311,7 +311,7 @@ public data?: {}; -> les données. Optionnel
 
 5) Dans le constructor on souhaite capturer les traces d'erreur via:
 Error.captureStackTrace(this, this.constructor);
-Il prend l'objet qu'on lui donne et ajoute la trace des erreurs capturée à l'objet fourni. 
+Il prend l'objet qu'on lui donne et ajoute la trace des erreurs capturées à l'objet fourni. 
 this fait référence à l'instance.
 
 6) export class NotFoundError extends DomainError {}
