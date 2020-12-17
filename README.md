@@ -502,6 +502,7 @@ typeorm dans le terminal fourni de l'aide
 NB: s'il ne reconnait pas la commande écrire npm i -g typeorm pour l'installer en global
 
 Aller dans le fichier ormconfig.json pour spécifier le chemin de tous nos répertoires pour ne pas avoir à le refaire à chaque fois.
+
 Pour connaitre les répertoires:
 "entities": ["'src/entities/**/*.{ts,js}'"], -> ou se trouvent toutes les classes. /*\ aux " ' ' " . terminal: typeorm schema:sync
 Pour envoyer l'entité avec typeorm, faire la requete vers la base et l'envoyer vers le serveur on écrit dans le terminal:
@@ -519,7 +520,19 @@ Pour les commandes cli
         "migrationsDir": "src/migrations",
         "subscribersDir": "src/subscribers"}
 
-/!!!\ Nous utiliserons les fixtures pour pallier ce problème.
+Le problème est que nous étions dans l'environnement typescript lorsque nous lancions la commande, donc ca renvoyait une erreur, il n'était pas capable de le gérer. Il faut donc le mettre dans le contexte ts-node comme suivant dans le script de package.json: 
 
-# Dans phpMyAdmin
+"typeorm": "ts-node ./node_modules/typeorm/cli -f ./ormconfig.json",
+-> Jutilise le contexte d'execution ts-node, puis utilisation de l'utilitaire cli dans le contexte ts-node puis le chemin. 
+Donc npm run typeorm reste dans le contexte ts-node
+"schema:sync": "npm run typeorm schema:drop && npm run orm schema:sync",
+-> Suppression avec le drop puis (&&) sync pour synchroniser mais le tout dans le contexte ts-node
 
+Il avait donc besoin d'être exécuté dans un contexte ts-node
+Donc pour synchroniser la base on doit écrire dans le terminal:
+npm run schema:sync
+
+
+# Les fixtures
+
+Lorsqu'on aura des données a précharger dans la db, on passe par les fixtures.

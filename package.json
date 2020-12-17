@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon",
     "build": "tsc",
+    "typeorm": "ts-node ./node_modules/typeorm/cli -f ./ormconfig.json",
+    "schema:sync": "npm run typeorm schema:drop && npm run orm schema:sync",
     "test": "mocha --watch --require ts-node/register --watch-extension ts test/**/*.spec.ts"
   },
   "keywords": [
